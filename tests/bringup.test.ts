@@ -42,4 +42,24 @@ describe("bringup", () => {
     expect(executed).toEqual(["a", "b"])
   })
 
+  it("does not allow adding steps after run", async () => {
+    const builder = bringup().step("a", () => {})
+
+    await builder.run()
+
+    expect(() => builder.step("b", () => {})).toThrow(
+      /bringup has already run; cannot add more steps/
+    )
+  })
+
+  it("does not allow run to be called more than once", async () => {
+    const b = bringup().step("one", () => {})
+  
+    await b.run()
+  
+    await expect(b.run()).rejects.toThrow(
+      /bringup has already run; cannot run again/
+    )
+  })  
+
 })

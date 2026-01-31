@@ -3,19 +3,30 @@ type Step = {
     run: () => Promise<void> | void
   }
   
-  class Bringup {
-    private steps: Step[] = []
+class Bringup {
+  private steps: Step[] = []
+  private hasRun = false
   
     step(name: string, fn: Step["run"]): this {
       if (!name) {
         throw new Error("bringup step requires a name")
       }
   
-      this.steps.push({ name, run: fn })
+    if (this.hasRun) {
+      throw new Error("bringup has already run; cannot add more steps")
+    }
+
+    this.steps.push({ name, run: fn })
       return this
     }
   
     async run(): Promise<void> {
+    if (this.hasRun) {
+      throw new Error("bringup has already run; cannot run again")
+    }
+
+    this.hasRun = true
+
       for (const step of this.steps) {
         try {
           await step.run()
