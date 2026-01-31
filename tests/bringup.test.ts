@@ -58,5 +58,24 @@ describe("bringup", () => {
   
     await expect(b.run()).rejects.toThrow(BringupError)
   })  
+})
 
+describe("bringup error cause", () => {
+  it("preserves the original error as the cause", async () => {
+    const originalError = new Error("original error")
+    
+    try {
+      await bringup()
+        .step("failing-step", () => {
+          throw originalError
+        })
+        .run()
+
+      // Should never reach here
+      expect.fail("expected bringup to throw")
+    } catch (err) {
+      expect(err).toBeInstanceOf(BringupError)
+      expect((err as BringupError).cause).toBe(originalError)
+    }
+  })
 })

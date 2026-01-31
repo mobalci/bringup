@@ -34,10 +34,8 @@ class Bringup {
           await step.run()
         } catch (err) {
           throw new BringupError(
-            `bringup failed at step "${step.name}": ${
-              err instanceof Error ? err.message : String(err)
-            }`
-          )
+            `bringup failed at step "${step.name}"`
+          , { cause: err })
         }
       }
     }
