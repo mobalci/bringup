@@ -22,4 +22,24 @@ describe("bringup", () => {
 
     expect(executed).toEqual(["first", "fails"])
   })
+
+  it("throws if a step name is missing", () => {
+    expect(() => bringup().step("", () => {})).toThrow()
+  })
+
+  it("runs all steps when none fail", async () => {
+    const executed: string[] = []
+  
+    await bringup()
+      .step("a", () => {
+        executed.push("a")
+      })
+      .step("b", () => {
+        executed.push("b")
+      })
+      .run()
+  
+    expect(executed).toEqual(["a", "b"])
+  })
+
 })
