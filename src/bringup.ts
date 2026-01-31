@@ -1,3 +1,5 @@
+import { BringupError } from "./errors"
+
 type Step = {
     name: string
     run: () => Promise<void> | void
@@ -9,11 +11,11 @@ class Bringup {
   
     step(name: string, fn: Step["run"]): this {
       if (!name) {
-        throw new Error("bringup step requires a name")
+        throw new BringupError("bringup step requires a name")
       }
   
     if (this.hasRun) {
-      throw new Error("bringup has already run; cannot add more steps")
+      throw new BringupError("bringup has already run; cannot add more steps")
     }
 
     this.steps.push({ name, run: fn })
@@ -22,7 +24,7 @@ class Bringup {
   
     async run(): Promise<void> {
     if (this.hasRun) {
-      throw new Error("bringup has already run; cannot run again")
+      throw new BringupError("bringup has already run; cannot run again")
     }
 
     this.hasRun = true
@@ -31,7 +33,7 @@ class Bringup {
         try {
           await step.run()
         } catch (err) {
-          throw new Error(
+          throw new BringupError(
             `bringup failed at step "${step.name}": ${
               err instanceof Error ? err.message : String(err)
             }`

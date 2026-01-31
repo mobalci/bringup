@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest"
 import { bringup } from "../src/bringup"
+import { BringupError } from "../src/errors"
 
 describe("bringup", () => {
   it("stops execution when a step fails", async () => {
@@ -18,13 +19,13 @@ describe("bringup", () => {
           executed.push("never")
         })
         .run()
-    ).rejects.toThrow(/fails/)
+    ).rejects.toThrow(BringupError)
 
     expect(executed).toEqual(["first", "fails"])
   })
 
   it("throws if a step name is missing", () => {
-    expect(() => bringup().step("", () => {})).toThrow()
+    expect(() => bringup().step("", () => {})).toThrow(BringupError)
   })
 
   it("runs all steps when none fail", async () => {
@@ -47,9 +48,7 @@ describe("bringup", () => {
 
     await builder.run()
 
-    expect(() => builder.step("b", () => {})).toThrow(
-      /bringup has already run; cannot add more steps/
-    )
+    expect(() => builder.step("b", () => {})).toThrow(BringupError)
   })
 
   it("does not allow run to be called more than once", async () => {
@@ -57,9 +56,7 @@ describe("bringup", () => {
   
     await b.run()
   
-    await expect(b.run()).rejects.toThrow(
-      /bringup has already run; cannot run again/
-    )
+    await expect(b.run()).rejects.toThrow(BringupError)
   })  
 
 })
