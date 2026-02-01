@@ -1,16 +1,30 @@
 {
     "name": "bringup",
     "version": "0.1.0",
-    "private": true,
-    "type": "module",
+    "description": "Define and enforce a single, explicit application startup sequence",
+    "author": "Mehmet Ömer Balcı",
     "license": "MIT",
-    "main": "dist/index.js",
-    "types": "dist/index.d.ts",
+    "type": "module",
+    "main": "./dist/index.js",
+    "types": "./dist/index.d.ts",
+    "files": [
+        "dist"
+    ],
     "scripts": {
         "build": "tsc",
-        "test": "vitest"
+        "test": "vitest",
+        "prepublishOnly": "npm run build"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/mobalci/bringup.git"
+    },
+    "homepage": "https://github.com/mobalci/bringup",
+    "bugs": {
+        "url": "https://github.com/mobalci/bringup/issues"
     },
     "devDependencies": {
+        "typescript": "^5.9.3",
         "vitest": "^4.0.18"
     }
 }
